@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoreCodeCamp.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,8 +22,17 @@ namespace CoreCodeCamp
     {
       services.AddDbContext<CampContext>();
       services.AddScoped<ICampRepository, CampRepository>();
-
-      services.AddMvc()
+      //about below later he had just services.AddAutoMapper();
+      services.AddAutoMapper(Assembly.GetExecutingAssembly());
+      
+      //below is versioning of project
+      services.AddApiVersioning(opt =>
+      {
+        opt.AssumeDefaultVersionWhenUnspecified = true;
+        opt.DefaultApiVersion = new ApiVersion(1, 1);
+        opt.ReportApiVersions = true;
+      });
+      services.AddMvc(opt => opt.EnableEndpointRouting = false)
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
